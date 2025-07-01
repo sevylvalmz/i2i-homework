@@ -1,0 +1,67 @@
+
+# Cloud-EX-01 AWS Ping Testi - Aşama Aşama Anlatım
+
+### Amaç:
+
+AWS üzerinde oluşturulan bir EC2 (Elastic Compute Cloud) sanal makinesine, yerel bilgisayardan ping testi (ICMP protokolü ile ağ bağlantısı testi) yapmak.
+
+---
+
+## 1. AWS Hesabı Oluşturma
+
+İlk olarak AWS’nin resmi sitesinden bir AWS hesabı oluşturulur.
+Bu hesap ile AWS’nin sunduğu servisleri kullanmak için AWS Management Console’a erişim sağlanır.
+
+---
+
+## 2. EC2 Örneği (Instance) Oluşturma
+
+AWS konsolunda EC2 servisi açılır.
+Yeni bir EC2 instance oluşturulur:
+
+* Uygun bir Amazon Machine Image (AMI) seçilir (örneğin Amazon Linux 2).
+* Instance tipi olarak ücretsiz katman destekleyen t2.micro seçilir.
+* Anahtar çifti (key pair) oluşturulur veya mevcut olan kullanılır.
+* Güvenlik grubu (Security Group) ayarları yapılır.
+
+---
+
+## 3. Güvenlik Grubu (Security Group) Ayarları – ICMP Erişimi
+
+Ping testi için ICMP protokolüne izin vermek gerekir.
+O yüzden EC2 örneğinin bağlı olduğu güvenlik grubuna, **ICMP (ping) trafiğine izin veren kural** eklenir:
+
+* Protokol: ICMP
+* Tip: Echo Request (ping)
+* Kaynak: Genellikle 0.0.0.0/0 (her yerden izin) veya sadece kendi IP adresi aralığın belirlenir.
+* Bu sayede dışarıdan gelen ping isteklerine EC2 cevap verebilir.
+
+---
+
+## 4. EC2 Instance’ın IP Adresinin Alınması
+
+Oluşturulan EC2 örneğinin **public IP adresi** veya **Elastic IP** alınır.
+Bu IP adresi, internet üzerinden örneğe ulaşmak için kullanılır.
+
+---
+
+## 5. Bilgisayardan Ping Testi Yapılması
+
+Kendi bilgisayarının komut satırında (CMD, Terminal) aşağıdaki komut çalıştırılır:
+
+```
+ping <EC2_Public_IP>
+```
+
+Örneğin:
+
+```
+ping 3.14.159.27
+```
+
+Eğer güvenlik grubu ve instance doğru ayarlandıysa, ping paketlerine cevap alınır ve aşağıdaki gibi sonuçlar görülür:
+
+* Gönderilen paket sayısı
+* Alınan cevap sayısı
+* Paket gecikme süreleri (ms cinsinden)
+
